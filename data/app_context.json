@@ -1,0 +1,12 @@
+{
+  "appContext":
+
+  {
+    "member_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+    "location": {
+      "latitude": 51.5079,
+      "longitude": -0.1246,
+      "description": "Charing Cross, London"
+    }
+  }
+}

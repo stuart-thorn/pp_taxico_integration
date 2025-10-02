@@ -1,0 +1,135 @@
+openapi: 3.0.3
+info:
+  title: PP – Member API
+  version: 0.1.0
+  description: Member-scoped endpoints for flight bookings.
+servers:
+  - url: https://api.pp.example.com/mem/v1
+security:
+  - BearerAuth: []
+
+paths:
+  /flightBookings/member:
+    get:
+      summary: Get member's flight bookings
+      description: Allows PP app to retrieve member's flight bookings.
+      parameters:
+        - name: memberId
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of bookings for the member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/MemberFlightBooking'
+              examples:
+                sample:
+                  value:
+                    items:
+                      - flightCode: "BA4321"
+                        fromAirport: "LHR"
+                        toAirport: "JFK"
+                        fromTerminal: "T3"
+                        scheduledDepartureTime: "2025-10-02T18:30:00Z"
+                        estimatedDepartureTIme: "2025-10-02T18:40:00Z"
+                        status: "PLANNED"
+                        taxiCoCustomerId: "tc_9f3a12"
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /flightBookings/taxiCoClient:
+    get:
+      summary: Get bookings by Taxico customer ID
+      description: Allows Taxico app to retrieve Taxico customer's flight bookings.
+      parameters:
+        - name: taxiCoCustomerId
+          in: query
+          required: true
+          schema: { type: string }
+      responses:
+        '200':
+          description: List of bookings for the Taxico customer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  items:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/PartnerFlightBooking'
+              examples:
+                sample:
+                  value:
+                    items:
+                      - flightCode: "BA4321"
+                        fromAirport: "LHR"
+                        toAirport: "JFK"
+                        fromTerminal: "T3"
+                        scheduledDepartureTime: "2025-10-02T18:30:00Z"
+                        estimatedDepartureTIme: "2025-10-02T18:40:00Z"
+                        status: "PLANNED"
+                        memberId: "m_12345"
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '403': { $ref: '#/components/responses/Forbidden' }
+        '404': { $ref: '#/components/responses/NotFound' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    MemberFlightBooking:
+      type: object
+      properties:
+        flightCode: { type: string }
+        fromAirport: { type: string }
+        toAirport: { type: string }
+        fromTerminal: { type: string, nullable: true }
+        scheduledDepartureTime: { type: string, format: date-time }
+        estimatedDepartureTIme: { type: string, format: date-time, nullable: true }
+        status: { type: string }
+        taxiCoCustomerId: { type: string, nullable: true }
+      required:
+        - flightCode
+        - fromAirport
+        - toAirport
+        - scheduledDepartureTime
+        - status
+    PartnerFlightBooking:
+      type: object
+      properties:
+        flightCode: { type: string }
+        fromAirport: { type: string }
+        toAirport: { type: string }
+        fromTerminal: { type: string, nullable: true }
+        scheduledDepartureTime: { type: string, format: date-time }
+        estimatedDepartureTIme: { type: string, format: date-time, nullable: true }
+        status: { type: string }
+        memberId: { type: string }
+      required:
+        - flightCode
+        - fromAirport
+        - toAirport
+        - scheduledDepartureTime
+        - status
+        - memberId
+  responses:
+    BadRequest:   { description: Invalid request parameters. }
+    Unauthorized: { description: Missing or invalid credentials. }
+    Forbidden:    { description: Caller not authorized for this customer. }
+    NotFound:     { description: No member or bookings found. }
+    ServerError:  { description: Unexpected server error. }

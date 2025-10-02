@@ -1,0 +1,215 @@
+openapi: 3.0.3
+info:
+  title: Taxico – Journey & Booking API
+  version: 0.1.0
+  description: Journey-time utilities and ride booking endpoints for PP integration.
+servers:
+  - url: https://api.taxico.example.com
+security:
+  - ApiKeyAuth: []
+
+paths:
+  /recommendedDepartureTime:
+    get:
+      summary: Recommended pickup time to arrive by target time
+      description: Allows PP app to know when a ride should start given specific end time/location.
+      parameters:
+        - name: arrivalTime
+          in: query
+          required: true
+          schema: { type: string, format: date-time }
+        - name: startLat
+          in: query
+          required: true
+          schema: { type: number, minimum: -90, maximum: 90 }
+        - name: startLon
+          in: query
+          required: true
+          schema: { type: number, minimum: -180, maximum: 180 }
+        - name: destinationLat
+          in: query
+          required: true
+          schema: { type: number, minimum: -90, maximum: 90 }
+        - name: destinationLon
+          in: query
+          required: true
+          schema: { type: number, minimum: -180, maximum: 180 }
+      responses:
+        '200':
+          description: Recommended departure time (no PP buffer)
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  departureTime: { type: string, format: date-time }
+              examples:
+                sample:
+                  value:
+                    departureTime: "2025-10-02T14:26:00Z"
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /timeToDestination:
+    get:
+      summary: Travel time to destination for a given departure
+      description: Allows PP app to evaluate how long a journey will take, given a specific start time/location.
+      parameters:
+        - name: departureTime
+          in: query
+          required: true
+          schema: { type: string, format: date-time }
+        - name: startLat
+          in: query
+          required: true
+          schema: { type: number, minimum: -90, maximum: 90 }
+        - name: startLon
+          in: query
+          required: true
+          schema: { type: number, minimum: -180, maximum: 180 }
+        - name: destinationLat
+          in: query
+          required: true
+          schema: { type: number, minimum: -90, maximum: 90 }
+        - name: destinationLon
+          in: query
+          required: true
+          schema: { type: number, minimum: -180, maximum: 180 }
+      responses:
+        '200':
+          description: Travel time to destination in seconds
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  secondsToDestination: { type: integer, example: 2880 }
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /bookRide:
+    post:
+      summary: Initiate a ride booking
+      description: Allows PP app to initiate Taxico booking.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BookRideRequest'
+            examples:
+              sample:
+                value:
+                  customerId: "tc_9f3a12"
+                  startLocation: { lat: 51.5079, lon: -0.1246 }
+                  startTime: "2025-10-02T14:26:00Z"
+      responses:
+        '201':
+          description: Ride booking created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BookRideResponse'
+              examples:
+                sample:
+                  value:
+                    bookingId: "rb_123456"
+                    status: "PENDING"
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+  /rideBookings:
+    get:
+      summary: Find existing ride bookings to a drop-off terminal
+      description: >
+        Allows PP app to check whether a member (via linked Taxico customerId) already has a ride booked
+        to the departure terminal around the given drop-off time.
+      parameters:
+        - name: customerId
+          in: query
+          required: true
+          schema: { type: string }
+        - name: dropoffLat
+          in: query
+          required: true
+          schema: { type: number, minimum: -90, maximum: 90 }
+        - name: dropoffLon
+          in: query
+          required: true
+          schema: { type: number, minimum: -180, maximum: 180 }
+        - name: dropoffTime
+          in: query
+          required: true
+          schema: { type: string, format: date-time }
+      responses:
+        '200':
+          description: Matching ride bookings, if any
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/RideBooking'
+              examples:
+                sample:
+                  value:
+                    - bookingId: "rb_123456"
+                      pickupLat: 51.5079
+                      pickupLon: -0.1246
+                      pickupTime: "2025-10-02T14:26:00Z"
+                      dropoffLat: 51.4723
+                      dropoffLon: -0.4571
+                      dropoffTime: "2025-10-02T15:20:00Z"
+        '400': { $ref: '#/components/responses/BadRequest' }
+        '401': { $ref: '#/components/responses/Unauthorized' }
+        '500': { $ref: '#/components/responses/ServerError' }
+
+components:
+  securitySchemes:
+    ApiKeyAuth:
+      type: apiKey
+      in: header
+      name: X-API-Key
+
+  schemas:
+    LatLon:
+      type: object
+      required: [lat, lon]
+      properties:
+        lat: { type: number, minimum: -90, maximum: 90 }
+        lon: { type: number, minimum: -180, maximum: 180 }
+
+    BookRideRequest:
+      type: object
+      required: [customerId, startLocation, startTime]
+      properties:
+        customerId: { type: string }
+        startLocation: { $ref: '#/components/schemas/LatLon' }
+        startTime: { type: string, format: date-time }
+
+    BookRideResponse:
+      type: object
+      required: [bookingId, status]
+      properties:
+        bookingId: { type: string }
+        status: { type: string, example: "PENDING" }
+
+    RideBooking:
+      type: object
+      required: [bookingId, pickupLat, pickupLon, pickupTime, dropoffLat, dropoffLon, dropoffTime]
+      properties:
+        bookingId: { type: string }
+        pickupLat: { type: number }
+        pickupLon: { type: number }
+        pickupTime: { type: string, format: date-time }
+        dropoffLat: { type: number }
+        dropoffLon: { type: number }
+        dropoffTime: { type: string, format: date-time }
+
+  responses:
+    BadRequest:   { description: Invalid request parameters. }
+    Unauthorized: { description: Missing or invalid API key. }
+    ServerError:  { description: Unexpected server error. }

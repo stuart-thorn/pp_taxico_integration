@@ -82,13 +82,21 @@ apis
 				(params as per taxi api)
 			res
 				departureTime (with buffer added)
-		/timeToDestinaion
+		/timeToDestination
 			req
 				memberId
 				terminalId
 				(params as per taxi api)
 			res
 				departureTime (with buffer added)
+		/flightBookings
+		    proxy to pp member api /flightBookings/member
+		/rideBookings
+            proxy to taxi api /rideBookings
+        /bookRide
+            proxy to taxi api /bookRide
+
+
 
 
 
