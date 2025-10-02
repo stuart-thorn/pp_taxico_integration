@@ -1,11 +1,11 @@
-# BookRideRequest
+# GeoAddress
 ## Properties
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-| **customerId** | **String** |  | [default to null] |
-| **startLocation** | [**LatLon**](LatLon.md) |  | [default to null] |
-| **startTime** | **Date** |  | [default to null] |
+| **lat** | **Double** |  | [default to null] |
+| **lon** | **Double** |  | [default to null] |
+| **address** | **String** |  | [optional] [default to null] |
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

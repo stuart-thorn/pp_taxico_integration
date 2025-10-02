@@ -18,14 +18,8 @@
 
 Why:
 
-- Your core entities are **relational** and benefit from **FKs + unique constraints** (airports/terminals/lounges).
-- You need **atomicity** across bookings, flights, and member link state.
-- You’ll do **time math** and **geo lookups**; Postgres handles both cleanly (intervals + PostGIS).
+- Core entities are **relational** and benefit from **FKs + unique constraints** (airports/terminals/lounges).
+- Need **atomicity** across bookings, flights, and member link state.
+- Will do **time math** and **geo lookups**; Postgres handles both cleanly (intervals + PostGIS).
 - Keeps PP ↔ Taxico correlation tight and auditable; avoids integrity bugs.
 
-# Where Mongo *could* fit (optional)
-
-- **Event/webhook inbox** from Taxico or flight providers (append-only, schemaless).
-- **Telemetry** or **prototype features** with rapidly changing shapes.
-
-But you can also keep this in Postgres via **JSONB** tables (e.g., `partner_events(id, partner, payload jsonb, received_at)`), indexed on keys you care about.

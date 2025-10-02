@@ -1,9 +1,10 @@
-# _recommendedDepartureTime_get_200_response
+# RideOption_estimatedFare
 ## Properties
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-| **departureTime** | **Date** | Pickup time with PP buffer already applied. | [optional] [default to null] |
+| **currency** | **String** |  | [default to null] |
+| **amount** | **Float** |  | [default to null] |
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

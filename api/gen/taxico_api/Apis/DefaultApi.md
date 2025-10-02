@@ -30,7 +30,7 @@ Initiate a ride booking
 
 ### Authorization
 
-[ApiKeyAuth](../../README.md#ApiKeyAuth)
+[ApiKeyAuth](../README.md#ApiKeyAuth)
 
 ### HTTP request headers
 

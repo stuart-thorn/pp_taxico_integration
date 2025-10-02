@@ -1,61 +1,35 @@
 # DefaultApi
 
-All URIs are relative to *https://api.pp.example.com/mem/v1*
+All URIs are relative to *https://member.pp.internal*
 
 | Method | HTTP request | Description |
 |------------- | ------------- | -------------|
-| [**flightBookingsMemberGet**](DefaultApi.md#flightBookingsMemberGet) | **GET** /flightBookings/member | Get member&#39;s flight bookings |
-| [**flightBookingsTaxiCoClientGet**](DefaultApi.md#flightBookingsTaxiCoClientGet) | **GET** /flightBookings/taxiCoClient | Get bookings by Taxico customer ID |
+| [**getFlightBookings**](DefaultApi.md#getFlightBookings) | **GET** /flightBookings | Get pending flight bookings for the authenticated member |
 
 
-<a name="flightBookingsMemberGet"></a>
-# **flightBookingsMemberGet**
-> _flightBookings_member_get_200_response flightBookingsMemberGet(memberId)
+<a name="getFlightBookings"></a>
+# **getFlightBookings**
+> getFlightBookings_200_response getFlightBookings(status, from, to, page, pageSize)
 
-Get member&#39;s flight bookings
-
-    Allows PP app to retrieve member&#39;s flight bookings.
+Get pending flight bookings for the authenticated member
 
 ### Parameters
 
 |Name | Type | Description  | Notes |
 |------------- | ------------- | ------------- | -------------|
-| **memberId** | **String**|  | [default to null] |
+| **status** | **String**| Filter by flight booking status | [optional] [default to null] [enum: PENDING, CHECKED_IN, CANCELLED] |
+| **from** | **Date**| Earliest departure time (ISO8601) | [optional] [default to null] |
+| **to** | **Date**| Latest departure time (ISO8601) | [optional] [default to null] |
+| **page** | **Integer**|  | [optional] [default to 1] |
+| **pageSize** | **Integer**|  | [optional] [default to 50] |
 
 ### Return type
 
-[**_flightBookings_member_get_200_response**](../Models/_flightBookings_member_get_200_response.md)
+[**getFlightBookings_200_response**](../Models/getFlightBookings_200_response.md)
 
 ### Authorization
 
-[BearerAuth](../README.md#BearerAuth)
-
-### HTTP request headers
-
-- **Content-Type**: Not defined
-- **Accept**: application/json
-
-<a name="flightBookingsTaxiCoClientGet"></a>
-# **flightBookingsTaxiCoClientGet**
-> _flightBookings_taxiCoClient_get_200_response flightBookingsTaxiCoClientGet(taxiCoCustomerId)
-
-Get bookings by Taxico customer ID
-
-    Allows Taxico app to retrieve Taxico customer&#39;s flight bookings.
-
-### Parameters
-
-|Name | Type | Description  | Notes |
-|------------- | ------------- | ------------- | -------------|
-| **taxiCoCustomerId** | **String**|  | [default to null] |
-
-### Return type
-
-[**_flightBookings_taxiCoClient_get_200_response**](../Models/_flightBookings_taxiCoClient_get_200_response.md)
-
-### Authorization
-
-[BearerAuth](../README.md#BearerAuth)
+[bearerAuth](../README.md#bearerAuth)
 
 ### HTTP request headers
 

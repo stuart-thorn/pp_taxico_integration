@@ -16,12 +16,12 @@ All URIs are relative to *https://api.taxico.example.com*
 <a name="documentation-for-models"></a>
 ## Documentation for Models
 
- - [BookRideRequest](Models/BookRideRequest.md)
- - [BookRideResponse](Models/BookRideResponse.md)
- - [LatLon](Models/LatLon.md)
- - [RideBooking](Models/RideBooking.md)
- - [_recommendedDepartureTime_get_200_response](taxico/Models/_recommendedDepartureTime_get_200_response.md)
- - [_timeToDestination_get_200_response](taxico/Models/_timeToDestination_get_200_response.md)
+ - [BookRideRequest](./Models/BookRideRequest.md)
+ - [BookRideResponse](./Models/BookRideResponse.md)
+ - [LatLon](./Models/LatLon.md)
+ - [RideBooking](./Models/RideBooking.md)
+ - [_recommendedDepartureTime_get_200_response](./Models/_recommendedDepartureTime_get_200_response.md)
+ - [_timeToDestination_get_200_response](./Models/_timeToDestination_get_200_response.md)
 
 
 <a name="documentation-for-authorization"></a>

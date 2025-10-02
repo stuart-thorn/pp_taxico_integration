@@ -73,64 +73,73 @@ data
 
 apis
 
+    pp mobile api
+        /bookingsList
+            doc
+                Get list of pending flights with related taxi data
+            req
+                memberId
+            res
+                flightCode
+                fromAirport
+                toAirport
+                fromTerminal
+                scheduledDepartureTime
+                estimatedDepartureTime
+                status
+                taxiCoCustomerId
+                taxi:
+                    existingRide
+                    recommendedDepartureTime
+                    timeToDestinationMinutes
 
-	pp bff
-		/recommendedDepartureTime
-			req
-				memberId
-				terminalId
-				(params as per taxi api)
-			res
-				departureTime (with buffer added)
-		/timeToDestination
-			req
-				memberId
-				terminalId
-				(params as per taxi api)
-			res
-				departureTime (with buffer added)
-		/flightBookings
-		    proxy to pp member api /flightBookings/member
-		/rideBookings
-            proxy to taxi api /rideBookings
+        /rideDetails
+            doc
+                Get ride details, journey time from location
+            req
+                memberId
+                terminalId
+                location (lat, lon)
+            res
+                timeToDestinationMinutes
+                recommendedDepartureTime
+                existingRide
+                rideOptions
+
         /bookRide
             proxy to taxi api /bookRide
 
 
+    pp member api
+        /flightBookings
+            doc
+                Allows pp app (via mobile api) to retrieve member's flight bookings
+            req
+                memberId
+            res
+                flightCode
+                fromAirport
+                toAirport
+                fromTerminal
+                scheduledDepartureTime
+                estimatedDepartureTime
+                status
+                taxiCoCustomerId
 
-
-
-	pp member api
-
-		/flightBookings/member
-			doc
-				Allows pp app to retrieve member's flight bookings
-			req
-				memberId
-			res
-				flightCode
-				fromAirport
-				toAirport
-				fromTerminal
-				scheduledDepartureTime
-				estimatedDepartureTIme
-				status
-				taxiCoCustomerId
-
-		/flightBookings/taxiCoClient
-			doc
-				Allows taxico app to retrieve taxico customer's flight bookings
-			req
-				taxiCoCustomerId
-			res
-				flightCode
-				fromAirport
-				toAirport
-				fromTerminal
-				scheduledDepartureTime
-				estimatedDepartureTIme
-				status
-				memberId
+        /flightBookings/taxiCoClient
+            doc
+                Allows taxico app to retrieve taxico customer's linked flight bookings
+            req
+                taxiCoCustomerId
+            res
+                flightCode
+                fromAirport
+                toAirport
+                fromTerminal
+                scheduledDepartureTime
+                estimatedDepartureTime
+                status
+                memberId
 
 
 	taxi api

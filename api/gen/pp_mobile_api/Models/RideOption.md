@@ -1,9 +1,11 @@
-# _flightBookings_taxiCoClient_get_200_response
+# RideOption
 ## Properties
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-| **items** | [**List**](PartnerFlightBooking.md) |  | [optional] [default to null] |
+| **serviceLevel** | **String** |  | [default to null] |
+| **estimatedFare** | [**RideOption_estimatedFare**](RideOption_estimatedFare.md) |  | [default to null] |
+| **etaDriverArrivalMinutes** | **Integer** |  | [default to null] |
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
