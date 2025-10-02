@@ -1,0 +1,241 @@
+
+
+data
+
+	pp
+
+		members
+			id
+			fname
+			lname
+			taxiCo_customer_id
+			taxiCo_customer_link_status
+			taxiCo_customer_link_time
+
+		flights
+			id
+			code
+			departure_airport
+			departure_terminal
+			arrival_airport
+			scheduled_departure
+			estimated_departure
+			status
+
+
+		bookings
+			id
+			member_id
+			flight_id
+
+
+		airports
+			id
+			name
+			code
+
+		terminals
+			id
+			name
+			code
+			dropoff_longitude
+			dropoff_latitude
+			transit_time_from_dropoff_to_gate
+
+
+		 lounges
+			id
+			terminal_id
+			name
+			tier
+			transit_time_from_security
+			transit_time_to_gate_min
+			transit_time_to_gate_max
+
+
+		config
+		  buffer_time_transit
+
+	app
+
+		{
+			"appContext":
+
+			{
+				"member_id": "aaaaaaaa-bbbb-cccc-dddd-eeeeeeeeeeee",
+				"location": {
+					"latitude": 51.5079,
+					"longitude": -0.1246,
+					"description": "Charing Cross, London"
+				}
+			}
+		}
+
+apis
+
+
+	pp bff
+		/recommendedDepartureTime
+			req
+				memberId
+				terminalId
+				(params as per taxi api)
+			res
+				departureTime (with buffer added)
+		/timeToDestinaion
+			req
+				memberId
+				terminalId
+				(params as per taxi api)
+			res
+				departureTime (with buffer added)
+
+
+
+	pp member api
+
+		/flightBookings/member
+			doc
+				Allows pp app to retrieve member's flight bookings
+			req
+				memberId
+			res
+				flightCode
+				fromAirport
+				toAirport
+				fromTerminal
+				scheduledDepartureTime
+				estimatedDepartureTIme
+				status
+				taxiCoCustomerId
+
+		/flightBookings/taxiCoClient
+			doc
+				Allows taxico app to retrieve taxico customer's flight bookings
+			req
+				taxiCoCustomerId
+			res
+				flightCode
+				fromAirport
+				toAirport
+				fromTerminal
+				scheduledDepartureTime
+				estimatedDepartureTIme
+				status
+				memberId
+
+
+	taxi api
+		/recommendedDepartureTime
+			doc
+				Allows pp app to know when ride should start given specific end time/location
+			req
+				arrivalTime
+				startLat
+				startLon
+				destinationLat
+				destinationLon
+			res
+				departureTime
+
+		/timeToDestination
+			doc
+				Allows pp app evaluate how long a journey will take, given a specific start time/location
+			req
+				departureTime
+				startLat
+				startLon
+				destinationLat
+				destinationLon
+			res
+				secondsToDestination
+
+		/bookRide
+			doc
+				Allows pp app to initiate taxico booking
+			req
+				customerId
+				startLocation
+				startTime
+
+
+		/rideBookings
+			doc
+				Allows pp app to check whether memeber, with linked taxico customerId, already has a ride booked
+				to the departure terminal
+			req
+				customerId
+				dropoffLat
+				dropoffLon
+				dropoffTime
+			res
+				[
+					bookingId
+					pickupLat
+					pickupLon
+					pickupTime
+					dropoffLat
+					dropoffLon
+					dropoffTime
+
+				]
+
+
+screens
+	pp app components
+		view bookings
+			data
+				api-> GET pp /flightBookings?memberId=$id
+			list of bookings, ordered by date asc
+				e.g Your flights
+					LGW - EJ89080 - 17:20
+					MAD - EJ89081 - Next Tues
+					LHR - BA89082 - 12/23
+		booking detail
+			e.g. Your flight to Madrid
+				On time - Departs 17:20
+				Leaves from London Gatwick North Terminal
+				Component->TaxiCofast booking
+				Component->Lounge details
+		lounge details
+			indicates lounge info for given terminal id
+		taxiCo fast booking
+			{taxico account linked?}
+				{taxico booking does not exist?}
+					(empty state)
+						Checking timing for your journey...
+						api-> GET
+
+					From start location {appContext.currentLocation} [Change start location]
+					From where you are, we recommend leaving {HrMin time} to allow time
+					Leave {mins} for a stop at {lounge name}?
+					Book ride for {time} at {start location}? cta-> POST taxiCo /bookRide(startLocation, time, meta...)
+				{taxico booking exists}
+					You have a taxico booking ref {ref} leaving {startLocation} at {time}
+					Book new ride cta-> taxico booking does not exist...
+			{taxico account not linked?}
+				link account
+		change start location
+			map component to change start location
+
+
+	taxiCo app
+		view pp bookings
+			data
+				api-> GET pp /flightBookings?clientId=$id
+			list of bookings, ordered by date asc
+				e.g Your flights
+					LGW - EJ89080 - 17:20
+					MAD - EJ89081 - Next Tues
+					LHR - BA89082 - 12/23
+
+
+
+
+
+
+
+
+
+
+
