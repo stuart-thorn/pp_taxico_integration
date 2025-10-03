@@ -1,7 +1,7 @@
 # PP Taxico Integration – Unified Airport Journey Service
 
-**Goal:** Design a scalable, maintainable, and well-structured system that integrates the Priority
-Pass app with a global taxi app to enhance the airport journey for travelers.
+**Goal:** Design a scalable, maintainable, and well-structured system that integrates the PP
+app with a global taxi app to enhance the airport journey for travelers.
 
 ---
 
