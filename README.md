@@ -55,7 +55,7 @@
 
 
 ### Data model
-![Data Model](docs/diagrams/data_model.png)
+![Data Model](docs/Diagrams/data_model.png)
 
 - **airports(id, name, code)**
 - **terminals(id, airport_id → airports.id, name, code, dropoff_lat/long, transit_time_from_dropoff_to_gate)**
