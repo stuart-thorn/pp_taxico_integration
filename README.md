@@ -30,10 +30,10 @@ Pass app with a global taxi app to enhance the airport journey for travelers.
 
 
 ### Assumptions
-| Assumption                            | Details                                                                                                      |
-|---------------------------------------|--------------------------------------------------------------------------------------------------------------|
-| **Journey time calculation**          | Taxico provides accurate ETAs and recommended pickup times based on live traffic and routing.                |
-| **Member to Taxico customer linking** | Assumption that Taxico members have been linked to PP members already (partner customer_id in member table). |
+| Assumption                            | Details                                                                                                                                                            |
+|---------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| **Journey time calculation**          | Taxico provides accurate ETAs and recommended pickup times based on live traffic and routing.                                                                      |
+| **Member to Taxico customer linking** | Member linking is not covered by this design: assumption that Taxico members have already been linked to PP members already (partner customer_id in member table). |
 
 
 ### Mobile app UX
@@ -122,13 +122,16 @@ Pass app with a global taxi app to enhance the airport journey for travelers.
 
 ## Omissions & Trade-offs
 
-| Item                                   | Decision  | Why / Shortcut                                 | Later / Fix                                                                       |
-|----------------------------------------|-----------|------------------------------------------------|-----------------------------------------------------------------------------------|
-| Partial offline support                | Skipped   | Journey timing relies on live data.            | Cache last known ETAs and conservative fallbacks.                                 |
-| Buffers applied in BFF                 | Shortcut  | BFF adds a single `config.buffer_time_transit`. | Per-airport/terminal buffers; member-level preference; A/B testing.               |
-| Direct latitude/longitude usage        | Shortcut  | Store drop-off as numeric lat/lon.             | Enable PostGIS and index on `GEOGRAPHY(Point)`; add proximity and geofencing.     |
-| No webhook inbox                       | Shortcut  | Poll Taxico for ride bookings.                 | Signed webhooks (`BookingUpdated`, `ETAChanged`), idempotency, dead-letter queue. |
-| No rate limiting/backoff policy in spec | Shortcut  | Omitted for brevity.                           | Per-route rate limits; 429 handling with `Retry-After`; exponential backoff.      |
-| Basic error model                      | Shortcut  | Minimal `400/401/403/404/422/500`.             | Typed errors with codes; client guidance; SLO-driven retries.                     |
+| Item                                    | Decision | Why / Shortcut                                 | Later / Fix                                                                                   |
+|-----------------------------------------|----------|------------------------------------------------|-----------------------------------------------------------------------------------------------|
+| Partial offline support                 | Skipped  | Journey timing relies on live data.            | Cache last known ETAs and conservative fallbacks.                                             |
+| Buffers applied in BFF                  | Shortcut | BFF adds a single `config.buffer_time_transit`. | Per-airport/terminal buffers; member-level preference; A/B testing.                           |
+| Direct latitude/longitude usage         | Shortcut | Store drop-off as numeric lat/lon.             | Enable PostGIS and index on `GEOGRAPHY(Point)`; add proximity and geofencing.                 |
+| No webhook inbox                        | Skipped  | Poll Taxico for ride bookings.                 | Signed webhooks (`BookingUpdated`, `ETAChanged`), idempotency, dead-letter queue.             |
+| No rate limiting/backoff policy in spec | Shortcut | Omitted for brevity.                           | Per-route rate limits; 429 handling with `Retry-After`; exponential backoff.                  |
+| Basic error model                       | Shortcut | Minimal `400/401/403/404/422/500`.             | Typed errors with codes; client guidance; SLO-driven retries.                                 |
+| Single table for bookings and flights   | Shortcut | Simplifies initial design.                     | Expect flight data would be sourced from different provider or from separate internal service |
+| Non-functional requirements             | Skipped  | Simplifies initial design.                     | Detailed analysis of non-functionals would need to take place and likely immpact design       |
+
 
 
