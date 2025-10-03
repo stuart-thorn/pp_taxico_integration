@@ -132,6 +132,6 @@ app with a global taxi app to enhance the airport journey for travelers.
 | Basic error model                       | Shortcut | Minimal `400/401/403/404/422/500`.             | Typed errors with codes; client guidance; SLO-driven retries.                                 |
 | Single table for bookings and flights   | Shortcut | Simplifies initial design.                     | Expect flight data would be sourced from different provider or from separate internal service |
 | Non-functional requirements             | Skipped  | Simplifies initial design.                     | Detailed analysis of non-functionals would need to take place and likely immpact design       |
-
+| Security infrastructure                  | Skipped  | Simplifies initial design.                     | IdP integration has been skipped over in architecture diagrams. Needs more time to add        |
 
 
