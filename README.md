@@ -1,6 +1,7 @@
 # PP Taxico Integration – Unified Airport Journey Service
 
-**Goal:** Help members get to the airport on time by showing **time-to-destination** and a **recommended departure (pickup) time** based on flight details, terminal drop-off, and configurable buffers. Deliver a clear architecture, prototype-ready APIs, and a safe data model.
+**Goal:** Design a scalable, maintainable, and well-structured system that integrates the Priority
+Pass app with a global taxi app to enhance the airport journey for travelers.
 
 ---
 
@@ -33,6 +34,11 @@
 |---------------------------------------|--------------------------------------------------------------------------------------------------------------|
 | **Journey time calculation**          | Taxico provides accurate ETAs and recommended pickup times based on live traffic and routing.                |
 | **Member to Taxico customer linking** | Assumption that Taxico members have been linked to PP members already (partner customer_id in member table). |
+
+
+### Mobile app UX
+![Mobile App Mockup](docs/Diagrams/mobile_ux.png)
+
 
 ### C4 diagrams
 #### System Context
@@ -87,16 +93,8 @@
     - Journey math & ride ops owned by the taxi provider.
         - `GET /recommendedDepartureTime` (compute pickup to **arrive by** `arrivalTime`)
         - `GET /timeToDestination` (compute seconds for given `departureTime`)
-        - `POST /bookRide`
-        - `GET /rideBookings`
-
-### Request Flow (happy path)
-
-1. **PP App** calls **PP BFF** `/rideDetails` with `memberId`, `terminalId`, and start/destination coords + `arrivalTime`.
-2. **PP BFF** reads **buffer** and validates `terminalId` (PP Member API or DB).
-3. **PP BFF** calls **Taxico** `/recommendedDepartureTime` to get **raw pickup**.
-4. **PP BFF** **applies PP buffer** (business-configurable) and returns **buffer-inclusive `departureTime`**.
-5. Bookings and ride checks are proxied through the BFF to keep a single front door.
+        - `POST /bookRide` make booking
+        - `GET /rideBookings` list of bookings for a customer/terminal
 
 ### Security & AuthN/Z
 
@@ -113,7 +111,7 @@
 
 ---
 
-## PCI Compliance (brief)
+## PCI Compliance
 
 - **Out of scope for PAN**: All **payments are executed in Taxico** (deep link or hosted page). The PP platform **never handles card numbers**.
 - **Data minimization**: PP shares only itinerary fields required for journey timing (no unnecessary PII).
