@@ -36,11 +36,11 @@
 
 ### C4 diagrams
 #### System Context
-![System Context](docs/diagrams/system_context.png)
+![System Context Diagram](docs/Diagrams/system_context.png)
 #### Container
-![Container Diagram](docs/diagrams/container.png)
+![Container Diagram](docs/Diagrams/container.png)
 #### Component and T-shirt sizing
-![Component Diagram](docs/diagrams/component.png)
+![Component Diagram](docs/Diagrams/component.png)
 
 | Module                                                          | T-shirt Size | Rationale                                                                                                                                      |
 |-----------------------------------------------------------------|--------------|------------------------------------------------------------------------------------------------------------------------------------------------|
